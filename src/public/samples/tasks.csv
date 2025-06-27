@@ -1,0 +1,13 @@
+TaskID,TaskName,Category,Duration,RequiredSkills,PreferredPhases,MaxConcurrent
+T001,Web Development,Development,3,"JavaScript,React","[1,2,3]",2
+T002,Database Design,Development,2,"SQL,Python","[2,3]",1
+T003,UI Design,Design,2,"UI/UX,Figma","[1,2]",1
+T004,Marketing Campaign,Marketing,4,"Sales,CRM","[1,2,3,4]",2
+T005,Analytics Setup,Analytics,2,"SQL,Analytics","[3,4]",1
+T006,Project Management,Management,5,"Project Management,Scrum","[1,2,3,4,5]",1
+T007,Quality Assurance,Testing,3,"Testing,Automation","[3,4,5]",2
+T008,DevOps Setup,Infrastructure,2,"AWS,Docker","[1,4]",1
+T009,Mobile App,Development,4,"JavaScript,React","[2,3,4]",1
+T010,Data Migration,Development,3,"SQL,Python","[2,4,5]",1
+T011,User Training,Training,1,"Project Management","[5]",3
+T012,System Integration,Development,3,"JavaScript,AWS","[3,4,5]",1

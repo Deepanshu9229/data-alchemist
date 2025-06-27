@@ -1,0 +1,6 @@
+ClientID,ClientName,PriorityLevel,RequestedTaskIDs,GroupTag,AttributesJSON
+C001,Tech Corp,5,"T001,T002,T003",Enterprise,"{""industry"":""Technology"",""budget"":50000}"
+C002,Marketing Inc,3,"T004,T005",SMB,"{""industry"":""Marketing"",""budget"":25000}"
+C003,Finance Ltd,4,"T006,T007,T008",Enterprise,"{""industry"":""Finance"",""budget"":75000}"
+C004,Startup Co,2,"T001,T009",Startup,"{""industry"":""Technology"",""budget"":15000}"
+C005,Retail Chain,4,"T010,T011,T012",Enterprise,"{""industry"":""Retail"",""budget"":60000}"
