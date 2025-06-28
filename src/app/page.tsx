@@ -130,7 +130,7 @@ export default function Home() {
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">
-          🚀 AI Resource Allocation Configurator
+          Data Alchemist
         </h1>
         <p className="text-lg text-gray-600">
           Transform messy spreadsheets into clean, validated data with AI-powered insights
@@ -148,7 +148,7 @@ export default function Home() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-blue-500 text-white shadow-sm'
+                    ? 'bg-gray-800 text-white shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -377,7 +377,7 @@ export default function Home() {
   <div className="mt-4">
     <div className="w-full bg-gray-200 rounded-full h-2">
       <div 
-        className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+        className="bg-gray-600 h-2 rounded-full transition-all duration-300"
         style={{ 
           width: `${(() => {
             let progress = 0;

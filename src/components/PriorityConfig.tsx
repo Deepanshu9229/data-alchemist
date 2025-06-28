@@ -43,7 +43,7 @@ export default function PriorityConfig({ priorities, onPrioritiesChange }: Prior
             <button
               key={preset}
               onClick={() => applyPreset(preset)}
-              className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+              className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-300 rounded-md transition-colors"
             >
               {preset}
             </button>
@@ -59,7 +59,7 @@ export default function PriorityConfig({ priorities, onPrioritiesChange }: Prior
               <label className="text-sm font-medium text-gray-700">
                 {priority.name}
               </label>
-              <span className="text-sm font-bold text-blue-600">
+              <span className="text-sm font-bold text-gray-800">
                 {priority.weight}%
               </span>
             </div>
