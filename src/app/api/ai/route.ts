@@ -1,28 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { searchWithNaturalLanguage, convertNaturalLanguageToRule, suggestDataFixes } from '@/lib/ai-helper';
+import { searchWithNaturalLanguage } from '@/lib/ai-helper';
 
 export async function POST(request: NextRequest) {
   try {
-    const { action, query, data, description, context, errors } = await request.json();
+    const { action, query, data } = await request.json();
 
-    switch (action) {
-      case 'search':
-        const searchResults = await searchWithNaturalLanguage(query, data);
-        return NextResponse.json({ results: searchResults });
+    if (action === 'search') {
+      console.log(process.env.OPENAI_API_KEY);
+      
+      if (!process.env.OPENAI_API_KEY) {
+        // Fallback to simple search if no API key
+        const filtered = data.filter((item: any) => 
+          JSON.stringify(item).toLowerCase().includes(query.toLowerCase())
+        );
+        return NextResponse.json({ results: filtered });
+      }
 
-      case 'convertRule':
-        const rule = await convertNaturalLanguageToRule(description, context);
-        return NextResponse.json(rule);
-
-      case 'suggestFixes':
-        const fixes = await suggestDataFixes(errors, data);
-        return NextResponse.json({ fixes });
-
-      default:
-        return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+      const results = await searchWithNaturalLanguage(query, data);
+      return NextResponse.json({ results });
     }
+
+    return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   } catch (error) {
     console.error('AI API error:', error);
-    return NextResponse.json({ error: 'AI processing failed' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'AI service temporarily unavailable',
+      results: [] 
+    }, { status: 500 });
   }
 }

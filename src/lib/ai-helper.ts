@@ -1,46 +1,18 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+}) : null;
 
 export async function searchWithNaturalLanguage(query: string, data: any[]) {
-  try {
-    const prompt = `
-Given this data structure: ${JSON.stringify(data.slice(0, 2), null, 2)}
-
-Convert this natural language query to a JavaScript filter function:
-"${query}"
-
-Return only the filter function body that can be used with array.filter()
-Example: return item.Duration > 1 && item.PreferredPhases.includes(2)
-`;
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.1,
-      max_tokens: 200
-    });
-
-    const filterCode = response.choices[0].message.content?.trim() || '';
-    
-    try {
-      // Fix: Cast to the specific function type that filter expects
-      const filterFunction = new Function('item', `return ${filterCode}`) as (item: any) => boolean;
-      return data.filter(filterFunction);
-    } catch (error) {
-      console.error('Filter function error:', error);
-      return data;
-    }
-  } catch (error) {
-    console.error('AI search error:', error);
-    return data;
+  if (!openai) {
+    console.log('OpenAI API key not configured, using fallback search');
+    // Fallback to simple text search
+    return data.filter(item => 
+      JSON.stringify(item).toLowerCase().includes(query.toLowerCase())
+    );
   }
-}
 
-// Alternative approach using eval (use with caution in production)
-export async function searchWithNaturalLanguageAlt(query: string, data: any[]) {
   try {
     const prompt = `
 Given this data structure: ${JSON.stringify(data.slice(0, 2), null, 2)}
@@ -50,6 +22,8 @@ Convert this natural language query to a JavaScript filter function:
 
 Return only the filter function body that can be used with array.filter()
 Example: return item.Duration > 1 && item.PreferredPhases.includes(2)
+
+Important: Only return the code inside the return statement, no function declaration.
 `;
 
     const response = await openai.chat.completions.create({
@@ -62,56 +36,31 @@ Example: return item.Duration > 1 && item.PreferredPhases.includes(2)
     const filterCode = response.choices[0].message.content?.trim() || '';
     
     try {
-      // Alternative: Use eval with arrow function (be careful with security)
-      const filterFunction = eval(`(item) => { ${filterCode} }`);
+      // Create a safe filter function
+      const filterFunction = new Function('item', `try { return ${filterCode}; } catch(e) { return false; }`) as (item: any) => boolean;
       return data.filter(filterFunction);
     } catch (error) {
       console.error('Filter function error:', error);
-      return data;
+      // Fallback to simple search
+      return data.filter(item => 
+        JSON.stringify(item).toLowerCase().includes(query.toLowerCase())
+      );
     }
   } catch (error) {
     console.error('AI search error:', error);
-    return data;
-  }
-}
-
-// Safer approach with proper typing
-export async function searchWithNaturalLanguageTyped<T>(query: string, data: T[]): Promise<T[]> {
-  try {
-    const prompt = `
-Given this data structure: ${JSON.stringify(data.slice(0, 2), null, 2)}
-
-Convert this natural language query to a JavaScript filter function:
-"${query}"
-
-Return only the filter function body that can be used with array.filter()
-Example: return item.Duration > 1 && item.PreferredPhases.includes(2)
-`;
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.1,
-      max_tokens: 200
-    });
-
-    const filterCode = response.choices[0].message.content?.trim() || '';
-    
-    try {
-      // Type-safe approach
-      const filterFunction: (item: T) => boolean = new Function('item', `return ${filterCode}`) as (item: T) => boolean;
-      return data.filter(filterFunction);
-    } catch (error) {
-      console.error('Filter function error:', error);
-      return data;
-    }
-  } catch (error) {
-    console.error('AI search error:', error);
-    return data;
+    // Fallback to simple search
+    return data.filter(item => 
+      JSON.stringify(item).toLowerCase().includes(query.toLowerCase())
+    );
   }
 }
 
 export async function convertNaturalLanguageToRule(description: string, context: any) {
+  if (!openai) {
+    console.log('OpenAI API key not configured');
+    return null;
+  }
+
   try {
     const prompt = `
 Convert this business rule description to a structured rule object:
@@ -129,7 +78,7 @@ Return only valid JSON object with id field added.
 `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.2,
       max_tokens: 300
@@ -146,6 +95,11 @@ Return only valid JSON object with id field added.
 }
 
 export async function suggestDataFixes(errors: any[], data: any[]) {
+  if (!openai) {
+    console.log('OpenAI API key not configured');
+    return [];
+  }
+
   try {
     const prompt = `
 Data validation errors found:
@@ -165,7 +119,7 @@ Suggest specific fixes for these errors. Return JSON array of fix suggestions:
 `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.3,
       max_tokens: 500

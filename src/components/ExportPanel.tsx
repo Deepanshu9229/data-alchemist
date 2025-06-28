@@ -13,6 +13,21 @@ interface ExportPanelProps {
   canExport: boolean;
 }
 
+const escapeCSVValue = (value: any) => {
+  if (Array.isArray(value)) {
+    value = value.join(', ');
+  }
+  let str = String(value);
+  if (str.includes('"')) {
+    str = str.replace(/"/g, '""');
+  }
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return `"${str}"`;
+  }
+  return str;
+};
+
+
 export default function ExportPanel({ data, rules, priorities, canExport }: ExportPanelProps) {
   const downloadCSV = (dataArray: any[], filename: string) => {
     if (!dataArray.length) return;
@@ -21,13 +36,8 @@ export default function ExportPanel({ data, rules, priorities, canExport }: Expo
     const csvContent = [
       headers.join(','),
       ...dataArray.map(row => 
-        headers.map(header => {
-          const value = row[header];
-          if (Array.isArray(value)) {
-            return `"${value.join(', ')}"`;
-          }
-          return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
-        }).join(',')
+        headers.map(header => escapeCSVValue(row[header])).join(',')
+
       )
     ].join('\n');
 

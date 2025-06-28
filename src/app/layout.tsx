@@ -5,7 +5,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'AI Resource Allocation Configurator',
+  title: 'Data Alchimist',
   description: 'Transform messy spreadsheets into clean, validated data with AI-powered insights',
 };
 

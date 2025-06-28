@@ -190,21 +190,21 @@ export default function Home() {
               </p>
               <div className="flex gap-2">
                 <a 
-                  href="/samples/clients.csv" 
+                  href="data-alchemist\public\samples\clients.csv" 
                   download 
                   className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
                 >
                   clients.csv
                 </a>
                 <a 
-                  href="/samples/workers.csv" 
+                  href="data-alchemist\public\samples\workers.csv" 
                   download 
                   className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
                 >
                   workers.csv
                 </a>
                 <a 
-                  href="/samples/tasks.csv" 
+                  href="data-alchemist\public\samples\tasks.csv" 
                   download 
                   className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
                 >
@@ -324,77 +324,92 @@ export default function Home() {
         )}
       </div>
 
-      {/* Progress Footer */}
-      <div className="mt-12 bg-white p-6 rounded-lg shadow-sm">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className={`w-3 h-3 rounded-full ${
-              uploadedFiles.clients || uploadedFiles.workers || uploadedFiles.tasks 
-                ? 'bg-green-500' 
-                : 'bg-gray-300'
-            }`} />
-            <span className="text-sm text-gray-600">
-              Data Upload: {Object.values(uploadedFiles).filter(Boolean).length}/3 files uploaded
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className={`w-3 h-3 rounded-full ${
-              errors.filter(e => e.severity === 'error').length === 0 
-                ? 'bg-green-500' 
-                : 'bg-red-500'
-            }`} />
-            <span className="text-sm text-gray-600">
-              Validation: {errors.filter(e => e.severity === 'error').length} errors
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className={`w-3 h-3 rounded-full ${
-              rules.length > 0 
-                ? 'bg-green-500' 
-                : 'bg-gray-300'
-            }`} />
-            <span className="text-sm text-gray-600">
-              Rules: {rules.length} configured
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className={`w-3 h-3 rounded-full ${
-              canExport 
-                ? 'bg-green-500' 
-                : 'bg-gray-300'
-            }`} />
-            <span className="text-sm text-gray-600">
-              Export: {canExport ? 'Ready' : 'Pending validation'}
-            </span>
-          </div>
-        </div>
-        
-        {/* Progress Bar */}
-        <div className="mt-4">
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-              style={{ 
-                width: `${
-                  (Object.values(uploadedFiles).filter(Boolean).length * 25) +
-                  (errors.filter(e => e.severity === 'error').length === 0 ? 25 : 0) +
-                  (rules.length > 0 ? 25 : 0) +
-                  (canExport ? 25 : 0)
-                }%`
-              }}
-            />
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span>Upload</span>
-            <span>Validate</span>
-            <span>Configure</span>
-            <span>Export</span>
-          </div>
-        </div>
-      </div>
+{/* Progress Footer */}
+<div className="mt-12 bg-white p-6 rounded-lg shadow-sm">
+  <div className="flex justify-between items-center">
+    <div className="flex items-center gap-4">
+      <div className={`w-3 h-3 rounded-full ${
+        uploadedFiles.clients || uploadedFiles.workers || uploadedFiles.tasks 
+          ? 'bg-green-500' 
+          : 'bg-gray-300'
+      }`} />
+      <span className="text-sm text-gray-600">
+        Data Upload: {Object.values(uploadedFiles).filter(Boolean).length}/3 files uploaded
+      </span>
+    </div>
+    
+    <div className="flex items-center gap-4">
+      <div className={`w-3 h-3 rounded-full ${
+        errors.filter(e => e.severity === 'error').length === 0 && 
+        (data.clients.length > 0 || data.workers.length > 0 || data.tasks.length > 0)
+          ? 'bg-green-500' 
+          : 'bg-red-500'
+      }`} />
+      <span className="text-sm text-gray-600">
+        Validation: {errors.filter(e => e.severity === 'error').length} errors
+      </span>
+    </div>
+    
+    <div className="flex items-center gap-4">
+      <div className={`w-3 h-3 rounded-full ${
+        rules.length > 0 
+          ? 'bg-green-500' 
+          : 'bg-gray-300'
+      }`} />
+      <span className="text-sm text-gray-600">
+        Rules: {rules.length} configured
+      </span>
+    </div>
+    
+    <div className="flex items-center gap-4">
+      <div className={`w-3 h-3 rounded-full ${
+        canExport 
+          ? 'bg-green-500' 
+          : 'bg-gray-300'
+      }`} />
+      <span className="text-sm text-gray-600">
+        Export: {canExport ? 'Ready' : 'Pending validation'}
+      </span>
+    </div>
+  </div>
+  
+  {/* Progress Bar */}
+  <div className="mt-4">
+    <div className="w-full bg-gray-200 rounded-full h-2">
+      <div 
+        className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+        style={{ 
+          width: `${(() => {
+            let progress = 0;
+            // Upload progress (25%)
+            const uploadCount = Object.values(uploadedFiles).filter(Boolean).length;
+            if (uploadCount > 0) progress += 25;
+            
+            // Validation progress (25%)
+            if (errors.filter(e => e.severity === 'error').length === 0 && 
+                (data.clients.length > 0 || data.workers.length > 0 || data.tasks.length > 0)) {
+              progress += 25;
+            }
+            
+            // Rules progress (25%)
+            if (rules.length > 0) progress += 25;
+            
+            // Export progress (25%)
+            if (canExport) progress += 25;
+            
+            return progress;
+          })()}%`
+        }}
+      />
+    </div>
+    <div className="flex justify-between text-xs text-gray-500 mt-1">
+      <span>Upload</span>
+      <span>Validate</span>
+      <span>Configure</span>
+      <span>Export</span>
+    </div>
+  </div>
+</div>
     </div>
   );
 }
