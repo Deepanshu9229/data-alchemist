@@ -190,23 +190,23 @@ export default function Home() {
               </p>
               <div className="flex gap-2">
                 <a 
-                  href="data-alchemist\public\samples\clients.csv" 
+                  href="/samples/clients.csv" 
                   download 
-                  className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+                  className="px-3 py-1 bg-gray-700 text-white rounded text-sm hover:bg-gray-900"
                 >
                   clients.csv
                 </a>
                 <a 
-                  href="data-alchemist\public\samples\workers.csv" 
+                  href="/samples/workers.csv" 
                   download 
-                  className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+                  className="px-3 py-1 bg-gray-700 text-white rounded text-sm hover:bg-gray-900"
                 >
                   workers.csv
                 </a>
                 <a 
-                  href="data-alchemist\public\samples\tasks.csv" 
+                  href="/samples/tasks.csv" 
                   download 
-                  className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+                  className="px-3 py-1 bg-gray-700 text-white rounded text-sm hover:bg-gray-900"
                 >
                   tasks.csv
                 </a>

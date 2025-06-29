@@ -93,12 +93,12 @@ export default function RuleBuilder({ rules, onRulesChange, data }: RuleBuilderP
             value={naturalLanguageRule}
             onChange={(e) => setNaturalLanguageRule(e.target.value)}
             placeholder="e.g., 'Tasks T1 and T2 must run together' or 'Limit sales team to max 3 slots per phase'"
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700"
           />
           <button
             onClick={handleNaturalLanguageRule}
             disabled={isConverting || !naturalLanguageRule.trim()}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 flex items-center gap-2"
+            className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-900 disabled:opacity-50 flex items-center gap-2"
           >
             {isConverting ? (
               <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
